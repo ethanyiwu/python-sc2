@@ -460,7 +460,7 @@ async def _host_replay(replay_path, ai, realtime, _portconfig, base_build, data_
 
 
 def get_replay_version(replay_path: Union[str, Path]) -> Tuple[str, str]:
-    with open(replay_path, 'rb') as f:
+    with open(replay_path, "rb") as f:
         replay_data = f.read()
         replay_io = BytesIO()
         replay_io.write(replay_data)

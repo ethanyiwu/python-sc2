@@ -191,7 +191,7 @@ for item in {class_name}:
                     f"Game version is different (Old: {self.game_version}, new: {ID_VERSION_STRING}. Updating ids to match game version"
                 )
             stable_id_path = Path(self.DATA_JSON[self.PF])
-            assert stable_id_path.is_file(), f"stable_id.json was not found at path \"{stable_id_path}\""
+            assert stable_id_path.is_file(), f'stable_id.json was not found at path "{stable_id_path}"'
             with stable_id_path.open(encoding="utf-8") as data_file:
                 data = json.loads(data_file.read())
             self.generate_python_code(self.parse_data(data))
