@@ -4,14 +4,11 @@ from sc2.expiring_dict import ExpiringDict
 
 
 def test_class():
-
     class State:
-
         def __init__(self):
             self.game_loop = 0
 
     class BotAI:
-
         def __init__(self):
             self.state = State()
 

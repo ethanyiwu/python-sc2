@@ -130,7 +130,6 @@ class Proxy:
                 if msg.data is None:
                     raise TypeError(f"data is None, {msg}")
                 if msg.data and msg.type == WSMsgType.BINARY:
-
                     await self.parse_request(msg)
 
                     response_bytes = await self.get_response()

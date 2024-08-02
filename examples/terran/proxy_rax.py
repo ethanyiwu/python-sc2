@@ -10,7 +10,6 @@ from sc2.units import Units
 
 
 class ProxyRaxBot(BotAI):
-
     async def on_start(self):
         self.client.game_step = 2
 
@@ -45,8 +44,9 @@ class ProxyRaxBot(BotAI):
                 await self.build(UnitTypeId.SUPPLYDEPOT, near=cc.position.towards(self.game_info.map_center, 5))
 
         # Build proxy barracks
-        elif self.structures(UnitTypeId.BARRACKS
-                             ).amount < 3 or (self.minerals > 400 and self.structures(UnitTypeId.BARRACKS).amount < 5):
+        elif self.structures(UnitTypeId.BARRACKS).amount < 3 or (
+            self.minerals > 400 and self.structures(UnitTypeId.BARRACKS).amount < 5
+        ):
             if self.can_afford(UnitTypeId.BARRACKS):
                 p: Point2 = self.game_info.map_center.towards(self.enemy_start_locations[0], 25)
                 await self.build(UnitTypeId.BARRACKS, near=p)

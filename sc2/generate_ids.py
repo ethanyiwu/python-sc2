@@ -17,7 +17,6 @@ except ImportError:
 
 
 class IdGenerator:
-
     def __init__(self, game_data: GameData = None, game_version: str = None, verbose: bool = False):
         self.game_data: GameData = game_data
         self.game_version = game_version
@@ -203,7 +202,6 @@ for item in {class_name}:
 
     @staticmethod
     def reimport_ids():
-
         # Reload the newly written "id" files
         # TODO This only re-imports modules, but if they haven't been imported, it will yield an error
         importlib.reload(sys.modules["sc2.ids.ability_id"])
@@ -225,15 +223,13 @@ for item in {class_name}:
         This should be done after the ids have been reimported."""
         ids = set(a.value for a in AbilityId if a.value != 0)
         self.game_data.abilities = {
-            a.ability_id: AbilityData(self.game_data, a)
-            for a in self.game_data._proto.abilities if a.ability_id in ids
+            a.ability_id: AbilityData(self.game_data, a) for a in self.game_data._proto.abilities if a.ability_id in ids
         }
         # self.game_data.abilities = {
         #     a.ability_id: AbilityData(self.game_data, a) for a in self.game_data._proto.abilities
         # }
         self.game_data.units = {
-            u.unit_id: UnitTypeData(self.game_data, u)
-            for u in self.game_data._proto.units if u.available
+            u.unit_id: UnitTypeData(self.game_data, u) for u in self.game_data._proto.units if u.available
         }
         self.game_data.upgrades = {u.upgrade_id: UpgradeData(self.game_data, u) for u in self.game_data._proto.upgrades}
 

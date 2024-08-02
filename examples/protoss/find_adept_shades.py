@@ -12,7 +12,6 @@ from sc2.position import Point2
 
 # pylint: disable=W0231
 class FindAdeptShadesBot(BotAI):
-
     def __init__(self):
         self.shaded = False
         self.shades_mapping = {}
@@ -60,8 +59,7 @@ class FindAdeptShadesBot(BotAI):
 def main():
     run_game(
         maps.get("(2)CatalystLE"),
-        [Bot(Race.Protoss, FindAdeptShadesBot()),
-         Computer(Race.Protoss, Difficulty.Medium)],
+        [Bot(Race.Protoss, FindAdeptShadesBot()), Computer(Race.Protoss, Difficulty.Medium)],
         realtime=False,
     )
 

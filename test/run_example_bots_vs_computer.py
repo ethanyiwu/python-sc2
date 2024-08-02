@@ -25,90 +25,90 @@ bot_infos = [
     {
         "race": Race.Protoss,
         "path": "examples.protoss.cannon_rush",
-        "bot_class_name": "CannonRushBot"
+        "bot_class_name": "CannonRushBot",
     },
     {
         "race": Race.Protoss,
         "path": "examples.protoss.find_adept_shades",
-        "bot_class_name": "FindAdeptShadesBot"
+        "bot_class_name": "FindAdeptShadesBot",
     },
     {
         "race": Race.Protoss,
         "path": "examples.protoss.threebase_voidray",
-        "bot_class_name": "ThreebaseVoidrayBot"
+        "bot_class_name": "ThreebaseVoidrayBot",
     },
     {
         "race": Race.Protoss,
         "path": "examples.protoss.warpgate_push",
-        "bot_class_name": "WarpGateBot"
+        "bot_class_name": "WarpGateBot",
     },
     # Terran
     {
         "race": Race.Terran,
         "path": "examples.terran.cyclone_push",
-        "bot_class_name": "CyclonePush"
+        "bot_class_name": "CyclonePush",
     },
     {
         "race": Race.Terran,
         "path": "examples.terran.mass_reaper",
-        "bot_class_name": "MassReaperBot"
+        "bot_class_name": "MassReaperBot",
     },
     {
         "race": Race.Terran,
         "path": "examples.terran.onebase_battlecruiser",
-        "bot_class_name": "BCRushBot"
+        "bot_class_name": "BCRushBot",
     },
     {
         "race": Race.Terran,
         "path": "examples.terran.proxy_rax",
-        "bot_class_name": "ProxyRaxBot"
+        "bot_class_name": "ProxyRaxBot",
     },
     {
         "race": Race.Terran,
         "path": "examples.terran.ramp_wall",
-        "bot_class_name": "RampWallBot"
+        "bot_class_name": "RampWallBot",
     },
     # Zerg
     {
         "race": Race.Zerg,
         "path": "examples.zerg.expand_everywhere",
-        "bot_class_name": "ExpandEverywhere"
+        "bot_class_name": "ExpandEverywhere",
     },
     {
         "race": Race.Zerg,
         "path": "examples.zerg.hydralisk_push",
-        "bot_class_name": "Hydralisk"
+        "bot_class_name": "Hydralisk",
     },
     {
         "race": Race.Zerg,
         "path": "examples.zerg.onebase_broodlord",
-        "bot_class_name": "BroodlordBot"
+        "bot_class_name": "BroodlordBot",
     },
     {
         "race": Race.Zerg,
         "path": "examples.zerg.zerg_rush",
-        "bot_class_name": "ZergRushBot"
+        "bot_class_name": "ZergRushBot",
     },
     # # Other
     {
         "race": Race.Protoss,
         "path": "examples.worker_stack_bot",
-        "bot_class_name": "WorkerStackBot"
+        "bot_class_name": "WorkerStackBot",
     },
     {
         "race": Race.Zerg,
         "path": "examples.worker_rush",
-        "bot_class_name": "WorkerRushBot"
+        "bot_class_name": "WorkerRushBot",
     },
     {
         "race": Race.Terran,
         "path": "examples.too_slow_bot",
-        "bot_class_name": "SlowBot"
+        "bot_class_name": "SlowBot",
     },
     {
         "race": Race.Terran,
         "path": "examples.distributed_workers",
-        "bot_class_name": "TerranBot"
+        "bot_class_name": "TerranBot",
     },
 ]
 

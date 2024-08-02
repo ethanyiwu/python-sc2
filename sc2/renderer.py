@@ -6,7 +6,6 @@ from sc2.position import Point2
 
 
 class Renderer:
-
     def __init__(self, client, map_size, minimap_size):
         self._client = client
 

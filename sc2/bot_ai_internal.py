@@ -8,9 +8,8 @@ import warnings
 from abc import ABC
 from collections import Counter
 from contextlib import suppress
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Set, Tuple, Union, final
 from typing import Counter as CounterType
-from typing import Dict, Generator, Iterable, List, Set, Tuple, Union, final
 
 import numpy as np
 from loguru import logger
@@ -53,7 +52,7 @@ class BotAIInternal(ABC):
 
     @final
     def _initialize_variables(self):
-        """ Called from main.py internally """
+        """Called from main.py internally"""
         self.cache: Dict[str, Any] = {}
         # Specific opponent bot ID used in sc2ai ladder games http://sc2ai.net/ and on ai arena https://aiarena.net
         # The bot ID will stay the same each game so your bot can "adapt" to the opponent
@@ -127,7 +126,7 @@ class BotAIInternal(ABC):
     @final
     @property
     def _game_info(self) -> GameInfo:
-        """ See game_info.py """
+        """See game_info.py"""
         warnings.warn(
             "Using self._game_info is deprecated and may be removed soon. Please use self.game_info directly.",
             DeprecationWarning,
@@ -138,7 +137,7 @@ class BotAIInternal(ABC):
     @final
     @property
     def _game_data(self) -> GameData:
-        """ See game_data.py """
+        """See game_data.py"""
         warnings.warn(
             "Using self._game_data is deprecated and may be removed soon. Please use self.game_data directly.",
             DeprecationWarning,
@@ -149,7 +148,7 @@ class BotAIInternal(ABC):
     @final
     @property
     def _client(self) -> Client:
-        """ See client.py """
+        """See client.py"""
         warnings.warn(
             "Using self._client is deprecated and may be removed soon. Please use self.client directly.",
             DeprecationWarning,
@@ -160,10 +159,8 @@ class BotAIInternal(ABC):
     @final
     @property_cache_once_per_frame
     def expansion_locations(self) -> Dict[Point2, Units]:
-        """ Same as the function above. """
-        assert (
-            self._expansion_positions_list
-        ), "self._find_expansion_locations() has not been run yet, so accessing the list of expansion locations is pointless."
+        """Same as the function above."""
+        assert self._expansion_positions_list, "self._find_expansion_locations() has not been run yet, so accessing the list of expansion locations is pointless."
         warnings.warn(
             "You are using 'self.expansion_locations', please use 'self.expansion_locations_list' (fast) or 'self.expansion_locations_dict' (slow) instead.",
             DeprecationWarning,
@@ -173,7 +170,7 @@ class BotAIInternal(ABC):
 
     @final
     def _find_expansion_locations(self):
-        """ Ran once at the start of the game to calculate expansion locations. """
+        """Ran once at the start of the game to calculate expansion locations."""
         # Idea: create a group for every resource, then merge these groups if
         # any resource in a group is closer than a threshold to any resource of another group
 
@@ -181,7 +178,8 @@ class BotAIInternal(ABC):
         resource_spread_threshold: float = 8.5
         # Create a group for every resource
         resource_groups: List[List[Unit]] = [
-            [resource] for resource in self.resources
+            [resource]
+            for resource in self.resources
             if resource.name != "MineralField450"  # dont use low mineral count patches
         ]
         # Loop the merging process as long as we change something
@@ -210,7 +208,8 @@ class BotAIInternal(ABC):
         # Distance offsets we apply to center of each resource group to find expansion position
         offset_range = 7
         offsets = [
-            (x, y) for x, y in itertools.product(range(-offset_range, offset_range + 1), repeat=2)
+            (x, y)
+            for x, y in itertools.product(range(-offset_range, offset_range + 1), repeat=2)
             if 4 < math.hypot(x, y) <= 8
         ]
         # Dict we want to return
@@ -226,7 +225,8 @@ class BotAIInternal(ABC):
             possible_points = (Point2((offset[0] + center_x, offset[1] + center_y)) for offset in offsets)
             # Filter out points that are too near
             possible_points = (
-                point for point in possible_points
+                point
+                for point in possible_points
                 # Check if point can be built on
                 if self.game_info.placement_grid[point.rounded] == 1
                 # Check if all resources have enough space to point
@@ -301,7 +301,7 @@ class BotAIInternal(ABC):
     @final
     @property_cache_once_per_frame
     def _worker_orders(self) -> CounterType[AbilityId]:
-        """ This function is used internally, do not use! It is to store all worker abilities. """
+        """This function is used internally, do not use! It is to store all worker abilities."""
         abilities_amount: CounterType[AbilityId] = Counter()
         structures_in_production: Set[Union[Point2, int]] = set()
         for structure in self.structures:
@@ -500,8 +500,7 @@ class BotAIInternal(ABC):
         self._structures_previous_map: Dict[int, Unit] = {structure.tag: structure for structure in self.structures}
         self._enemy_units_previous_map: Dict[int, Unit] = {unit.tag: unit for unit in self.enemy_units}
         self._enemy_structures_previous_map: Dict[int, Unit] = {
-            structure.tag: structure
-            for structure in self.enemy_structures
+            structure.tag: structure for structure in self.enemy_structures
         }
         self._all_units_previous_map: Dict[int, Unit] = {unit.tag: unit for unit in self.all_units}
 
@@ -633,7 +632,7 @@ class BotAIInternal(ABC):
 
     @final
     async def _after_step(self) -> int:
-        """ Executed by main.py after each on_step function. """
+        """Executed by main.py after each on_step function."""
         # Keep track of the bot on_step duration
         self._time_after_step: float = time.perf_counter()
         step_duration = self._time_after_step - self._time_before_step
@@ -723,8 +722,10 @@ class BotAIInternal(ABC):
                     or structure.shield < previous_frame_structure.shield
                 ):
                     damage_amount = (
-                        previous_frame_structure.health - structure.health + previous_frame_structure.shield -
-                        structure.shield
+                        previous_frame_structure.health
+                        - structure.health
+                        + previous_frame_structure.shield
+                        - structure.shield
                     )
                     await self.on_unit_took_damage(structure, damage_amount)
                 # Check if a structure changed its type
@@ -768,7 +769,7 @@ class BotAIInternal(ABC):
     @final
     @property
     def _pdist(self) -> np.ndarray:
-        """ As property, so it will be recalculated each time it is called, or return from cache if it is called multiple times in teh same game_loop. """
+        """As property, so it will be recalculated each time it is called, or return from cache if it is called multiple times in teh same game_loop."""
         if self._generated_frame != self.state.game_loop:
             return self.calculate_distances()
         return self._cached_pdist
@@ -776,7 +777,7 @@ class BotAIInternal(ABC):
     @final
     @property
     def _cdist(self) -> np.ndarray:
-        """ As property, so it will be recalculated each time it is called, or return from cache if it is called multiple times in teh same game_loop. """
+        """As property, so it will be recalculated each time it is called, or return from cache if it is called multiple times in teh same game_loop."""
         if self._generated_frame != self.state.game_loop:
             return self.calculate_distances()
         return self._cached_cdist
@@ -817,7 +818,7 @@ class BotAIInternal(ABC):
 
     @final
     def _calculate_distances_method3(self) -> np.ndarray:
-        """ Nearly same as above, but without asserts"""
+        """Nearly same as above, but without asserts"""
         self._generated_frame = self.state.game_loop
         flat_positions = (coord for unit in self.all_units for coord in unit.position_tuple)
         positions_array: np.ndarray = np.fromiter(
@@ -844,7 +845,7 @@ class BotAIInternal(ABC):
     @final
     @staticmethod
     def convert_tuple_to_numpy_array(pos: Tuple[float, float]) -> np.ndarray:
-        """ Converts a single position to a 2d numpy array with 1 row and 2 columns. """
+        """Converts a single position to a 2d numpy array with 1 row and 2 columns."""
         return np.fromiter(pos, dtype=float, count=2).reshape((1, 2))
 
     # Fast and simple calculation functions
@@ -878,8 +879,8 @@ class BotAIInternal(ABC):
             return 0
         # Calculate index, needs to be after pdist has been calculated and cached
         condensed_index = self.square_to_condensed(unit1.distance_calculation_index, unit2.distance_calculation_index)
-        assert condensed_index < len(
-            self._cached_pdist
+        assert (
+            condensed_index < len(self._cached_pdist)
         ), f"Condensed index is larger than amount of calculated distances: {condensed_index} < {len(self._cached_pdist)}, units that caused the assert error: {unit1} and {unit2}"
         distance = self._pdist[condensed_index]
         return distance
@@ -905,7 +906,7 @@ class BotAIInternal(ABC):
         units: Units,
         pos: Union[Tuple[float, float], Point2],
     ) -> Generator[float, None, None]:
-        """ This function does not scale well, if len(units) > 100 it gets fairly slow """
+        """This function does not scale well, if len(units) > 100 it gets fairly slow"""
         return (self.distance_math_hypot(u.position_tuple, pos) for u in units)
 
     @final
@@ -914,7 +915,7 @@ class BotAIInternal(ABC):
         unit: Unit,
         points: Iterable[Tuple[float, float]],
     ) -> Generator[float, None, None]:
-        """ This function does not scale well, if len(points) > 100 it gets fairly slow """
+        """This function does not scale well, if len(points) > 100 it gets fairly slow"""
         pos = unit.position_tuple
         return (self.distance_math_hypot(p, pos) for p in points)
 

@@ -16,7 +16,6 @@ from sc2.unit import Unit
 
 
 class TestBot(BotAI):
-
     def __init__(self):
         # The time the bot has to complete all tests, here: the number of game seconds
         self.game_time_timeout_limit = 20 * 60  # 20 minutes ingame time
@@ -24,7 +23,8 @@ class TestBot(BotAI):
         # Check how many test action functions we have
         # At least 4 tests because we test properties and variables
         self.action_tests = [
-            getattr(self, f"test_botai_actions{index}") for index in range(4000)
+            getattr(self, f"test_botai_actions{index}")
+            for index in range(4000)
             if hasattr(getattr(self, f"test_botai_actions{index}", 0), "__call__")
         ]
         self.tests_target = 4
@@ -186,7 +186,7 @@ class TestBot(BotAI):
             return attacker, defender
 
         def do_some_unit_property_tests(attacker: Unit, defender: Unit):
-            """ Some tests that are not covered by test_pickled_data.py """
+            """Some tests that are not covered by test_pickled_data.py"""
             # TODO move unit unrelated tests elsewhere
             self.step_time
             self.units_created
@@ -241,17 +241,15 @@ class TestBot(BotAI):
             for attacker_type in attacker_units:
                 for defender_type in defender_units:
                     # DT, Thor, Tempest one-shots workers, so skip test
-                    if (
-                        attacker_type in {
-                            UnitTypeId.DARKTEMPLAR,
-                            UnitTypeId.TEMPEST,
-                            UnitTypeId.THOR,
-                            UnitTypeId.THORAP,
-                            UnitTypeId.LIBERATORAG,
-                            UnitTypeId.PLANETARYFORTRESS,
-                            UnitTypeId.ARCHON,
-                        } and defender_type in {UnitTypeId.PROBE, UnitTypeId.DRONE, UnitTypeId.SCV, UnitTypeId.MULE}
-                    ):
+                    if attacker_type in {
+                        UnitTypeId.DARKTEMPLAR,
+                        UnitTypeId.TEMPEST,
+                        UnitTypeId.THOR,
+                        UnitTypeId.THORAP,
+                        UnitTypeId.LIBERATORAG,
+                        UnitTypeId.PLANETARYFORTRESS,
+                        UnitTypeId.ARCHON,
+                    } and defender_type in {UnitTypeId.PROBE, UnitTypeId.DRONE, UnitTypeId.SCV, UnitTypeId.MULE}:
                         continue
 
                     # Spawn units
@@ -263,7 +261,9 @@ class TestBot(BotAI):
                     # Wait for units to spawn
                     attacker, defender = get_attacker_and_defender()
                     while (
-                        attacker is None or defender is None or attacker.type_id != attacker_type
+                        attacker is None
+                        or defender is None
+                        or attacker.type_id != attacker_type
                         or defender.type_id != defender_type
                     ):
                         await self._advance_steps(1)
@@ -318,7 +318,6 @@ class TestBot(BotAI):
 
 
 class EmptyBot(BotAI):
-
     async def on_start(self):
         if self.units:
             await self.client.debug_kill_unit(self.units)

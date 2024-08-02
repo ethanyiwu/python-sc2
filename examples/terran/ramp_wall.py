@@ -17,7 +17,6 @@ from sc2.units import Units
 
 
 class RampWallBot(BotAI):
-
     # pylint: disable=W0231
     def __init__(self):
         self.unit_command_uses_self_do = False
@@ -87,8 +86,7 @@ class RampWallBot(BotAI):
         # Filter locations close to finished supply depots
         if depots:
             depot_placement_positions: Set[Point2] = {
-                d
-                for d in depot_placement_positions if depots.closest_distance_to(d) > 1
+                d for d in depot_placement_positions if depots.closest_distance_to(d) > 1
             }
 
         # Build depots
@@ -248,7 +246,7 @@ class RampWallBot(BotAI):
         self.client.debug_text_simple(text="Hello world2!")
 
     def draw_facing_units(self):
-        """ Draws green box on top of selected_unit2, if selected_unit2 is facing selected_unit1 """
+        """Draws green box on top of selected_unit2, if selected_unit2 is facing selected_unit1"""
         selected_unit1: Unit
         selected_unit2: Unit
         red = Point3((255, 0, 0))

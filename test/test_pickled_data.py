@@ -1000,10 +1000,10 @@ def test_position_pointlike(x1, y1, x2, y2, x3, y3):
     pos3 = Point2((x3, y3))
     epsilon = 1e-3
     assert pos1.position == pos1
-    dist = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+    dist = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
     assert abs(pos1.distance_to(pos2) - dist) <= epsilon
     assert abs(pos1.distance_to_point2(pos2) - dist) <= epsilon
-    assert abs(pos1._distance_squared(pos2)**0.5 - dist) <= epsilon
+    assert abs(pos1._distance_squared(pos2) ** 0.5 - dist) <= epsilon
 
     points = {pos2, pos3}
     points2 = {pos1, pos2, pos3}
@@ -1012,15 +1012,15 @@ def test_position_pointlike(x1, y1, x2, y2, x3, y3):
         assert pos1.sort_by_distance(points2) == sorted(points2, key=lambda p: pos1._distance_squared(p))
         assert pos1.closest(points2) == pos1
         closest_point = min(points, key=lambda p: p._distance_squared(pos1))
-        dist_closest_point = pos1._distance_squared(closest_point)**0.5
+        dist_closest_point = pos1._distance_squared(closest_point) ** 0.5
         furthest_point = max(points, key=lambda p: p._distance_squared(pos1))
-        dist_furthest_point = pos1._distance_squared(furthest_point)**0.5
+        dist_furthest_point = pos1._distance_squared(furthest_point) ** 0.5
 
         # Distances between pos1-pos2 and pos1-pos3 might be the same, so the sorting might still be different, that's why I use a set here
         assert pos1.closest(points) in {p for p in points2 if abs(pos1.distance_to(p) - dist_closest_point) < epsilon}
-        assert abs(pos1.distance_to_closest(points) - pos1._distance_squared(closest_point)**0.5) < epsilon
+        assert abs(pos1.distance_to_closest(points) - pos1._distance_squared(closest_point) ** 0.5) < epsilon
         assert pos1.furthest(points) in {p for p in points2 if abs(pos1.distance_to(p) - dist_furthest_point) < epsilon}
-        assert abs(pos1.distance_to_furthest(points) - pos1._distance_squared(furthest_point)**0.5) < epsilon
+        assert abs(pos1.distance_to_furthest(points) - pos1._distance_squared(furthest_point) ** 0.5) < epsilon
         assert pos1.offset(pos2) == Point2((pos1.x + pos2.x, pos1.y + pos2.y))
         if pos1 != pos2:
             assert pos1.unit_axes_towards(pos2) != Point2((0, 0))
@@ -1067,13 +1067,13 @@ def test_position_point2(x1, y1, x2, y2):
     assert pos1.to2 == pos1
     assert pos1.to3 == Point3((x1, y1, 0))
 
-    length1 = (pos1.x**2 + pos1.y**2)**0.5
+    length1 = (pos1.x**2 + pos1.y**2) ** 0.5
     assert abs(pos1.length - length1) < 0.001
     if length1:
         normalized1 = pos1 / length1
         assert abs(pos1.normalized.is_same_as(pos1 / length1))
         assert abs(normalized1.length - 1) < 0.001
-    length2 = (pos2.x**2 + pos2.y**2)**0.5
+    length2 = (pos2.x**2 + pos2.y**2) ** 0.5
     assert abs(pos2.length - length2) < 0.001
     if length2:
         normalized2 = pos2 / length2

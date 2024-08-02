@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class UnitCommand:
-
     def __init__(self, ability: AbilityId, unit: Unit, target: Union[Unit, Point2] = None, queue: bool = False):
         """
         :param ability:

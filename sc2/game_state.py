@@ -25,7 +25,6 @@ except ImportError:
 
 
 class Blip:
-
     def __init__(self, proto):
         """
         :param proto:
@@ -92,7 +91,6 @@ class Common:
 
 
 class EffectData:
-
     def __init__(self, proto, fake=False):
         """
         :param proto:
@@ -120,12 +118,12 @@ class EffectData:
 
     @property
     def is_mine(self) -> bool:
-        """ Checks if the effect is caused by me. """
+        """Checks if the effect is caused by me."""
         return self._proto.alliance == IS_MINE
 
     @property
     def is_enemy(self) -> bool:
-        """ Checks if the effect is hostile. """
+        """Checks if the effect is hostile."""
         return self._proto.alliance == IS_ENEMY
 
     @property
@@ -150,7 +148,6 @@ class ChatMessage:
 
 @dataclass
 class AbilityLookupTemplateClass:
-
     @property
     def exact_id(self) -> AbilityId:
         return AbilityId(self.ability_id)
@@ -194,7 +191,6 @@ class ActionError(AbilityLookupTemplateClass):
 
 
 class GameState:
-
     def __init__(self, response_observation, previous_observation=None):
         """
         :param response_observation:
@@ -236,7 +232,7 @@ class GameState:
 
     @cached_property
     def dead_units(self) -> Set[int]:
-        """ A set of unit tags that died this frame """
+        """A set of unit tags that died this frame"""
         _dead_units = set(self.observation_raw.event.dead_units)
         if self.previous_observation:
             return _dead_units | set(self.previous_observation.observation.raw_data.event.dead_units)

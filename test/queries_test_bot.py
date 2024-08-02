@@ -24,7 +24,6 @@ from sc2.position import Point2
 
 
 class TestBot(BotAI):
-
     def __init__(self):
         # The time the bot has to complete all tests, here: the number of game seconds
         self.game_time_timeout_limit = 20 * 60  # 20 minutes ingame time
@@ -46,7 +45,7 @@ class TestBot(BotAI):
         sys.exit(0)
 
     async def clear_map_center(self):
-        """ Spawn observer in map center, remove all enemy units, remove all own units. """
+        """Spawn observer in map center, remove all enemy units, remove all own units."""
         map_center = self.game_info.map_center
 
         # Spawn observer to be able to see enemy invisible units
@@ -251,7 +250,6 @@ class TestBot(BotAI):
 
 
 class EmptyBot(BotAI):
-
     async def on_step(self, iteration: int):
         for unit in self.units:
             unit.hold_position()

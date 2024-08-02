@@ -66,7 +66,7 @@ class GameMatch:
                 self.sc2_config = [{}]
             while len(self.sc2_config) < len(self.players):
                 self.sc2_config += self.sc2_config
-            self.sc2_config = self.sc2_config[:len(self.players)]
+            self.sc2_config = self.sc2_config[: len(self.players)]
 
     @property
     def needed_sc2_count(self) -> int:
@@ -154,7 +154,7 @@ async def _play_game_ai(
         # In on_step various errors can occur - log properly
         try:
             await ai.on_step(iteration)
-        except (AttributeError, ) as e:
+        except (AttributeError,) as e:
             logger.exception(f"Caught exception: {e}")
             raise
         except Exception as e:
@@ -206,12 +206,7 @@ async def _play_game_ai(
 
 
 async def _play_game(
-    player: AbstractPlayer,
-    client: Client,
-    realtime,
-    portconfig,
-    game_time_limit=None,
-    rgb_render_config=None
+    player: AbstractPlayer, client: Client, realtime, portconfig, game_time_limit=None, rgb_render_config=None
 ) -> Result:
     assert isinstance(realtime, bool), repr(realtime)
 
@@ -349,7 +344,6 @@ async def _host_game(
     sc2_version=None,
     disable_fog=None,
 ):
-
     assert players, "Can't create a game without players"
 
     assert any(isinstance(p, (Human, Bot)) for p in players)
@@ -486,7 +480,7 @@ def run_game(map_settings, players, **kwargs) -> Union[Result, List[Optional[Res
             return await asyncio.gather(
                 _host_game(map_settings, players, **kwargs, portconfig=portconfig),
                 _join_game(players, **join_kwargs, portconfig=portconfig),
-                return_exceptions=True
+                return_exceptions=True,
             )
 
         result: List[Result] = asyncio.run(run_host_and_join())
@@ -663,7 +657,7 @@ async def maintain_SCII_count(count: int, controllers: List[Controller], proc_ar
                 new_controllers = await asyncio.wait_for(
                     # pylint: disable=C2801
                     asyncio.gather(*[sc.__aenter__() for sc in extra], return_exceptions=True),
-                    timeout=50
+                    timeout=50,
                 )
 
             controllers.extend(c for c in new_controllers if isinstance(c, Controller))

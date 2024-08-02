@@ -32,19 +32,17 @@ def get_map_file_path() -> Path:
 # Custom repr function so that the output is always the same and only changes when there were changes in the data.json tech tree file
 # The output just needs to be ordered (sorted by enum name), but it does not matter anymore if the bot then imports an unordered dict and set
 class OrderedDict2(OrderedDict):
-
     def __repr__(self):
         if not self:
             return "{}"
         return (
-            "{" +
-            ", ".join(f"{repr(key)}: {repr(value)}"
-                      for key, value in sorted(self.items(), key=lambda u: u[0].name)) + "}"
+            "{"
+            + ", ".join(f"{repr(key)}: {repr(value)}" for key, value in sorted(self.items(), key=lambda u: u[0].name))
+            + "}"
         )
 
 
 class OrderedSet2(set):
-
     def __repr__(self):
         if not self:
             return "set()"
@@ -115,7 +113,9 @@ def get_unit_train_build_abilities(data):
         # Collect larva morph abilities, and one way morphs (exclude burrow, hellbat morph, siege tank siege)
         # Also doesnt include building addons
         if not train_unit_type_id_value and (
-            "LARVATRAIN_" in ability_id.name or ability_id in {
+            "LARVATRAIN_" in ability_id.name
+            or ability_id
+            in {
                 AbilityId.MORPHTOBROODLORD_BROODLORD,
                 AbilityId.MORPHZERGLINGTOBANELING_BANELING,
                 AbilityId.MORPHTORAVAGER_RAVAGER,
@@ -533,8 +533,7 @@ from typing import Dict, Set, Union
         unit_research_abilities_dict_path,
         dict_name="RESEARCH_INFO",
         file_header=file_header,
-        dict_type_annotation=
-        ": Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool, UnitTypeId, UpgradeId]]]]",
+        dict_type_annotation=": Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool, UnitTypeId, UpgradeId]]]]",
     )
     dump_dict_to_file(
         unit_trained_from,

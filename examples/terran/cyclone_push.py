@@ -10,7 +10,6 @@ from sc2.units import Units
 
 
 class CyclonePush(BotAI):
-
     def select_target(self) -> Point2:
         # Pick a random enemy structure's position
         targets = self.enemy_structures
@@ -58,7 +57,8 @@ class CyclonePush(BotAI):
         # While we have less than 22 workers: build more
         # Check if we can afford them (by minerals and by supply)
         if (
-            self.can_afford(UnitTypeId.SCV) and self.supply_workers + self.already_pending(UnitTypeId.SCV) < 22
+            self.can_afford(UnitTypeId.SCV)
+            and self.supply_workers + self.already_pending(UnitTypeId.SCV) < 22
             and cc.is_idle
         ):
             cc.train(UnitTypeId.SCV)

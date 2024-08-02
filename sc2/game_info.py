@@ -41,7 +41,7 @@ class Ramp:
 
     @cached_property
     def upper(self) -> FrozenSet[Point2]:
-        """ Returns the upper points of a ramp. """
+        """Returns the upper points of a ramp."""
         current_max = -10000
         result = set()
         for p in self.points:
@@ -55,7 +55,7 @@ class Ramp:
 
     @cached_property
     def upper2_for_ramp_wall(self) -> FrozenSet[Point2]:
-        """ Returns the 2 upper ramp points of the main base ramp required for the supply depot and barracks placement properties used in this file. """
+        """Returns the 2 upper ramp points of the main base ramp required for the supply depot and barracks placement properties used in this file."""
         # From bottom center, find 2 points that are furthest away (within the same ramp)
         return frozenset(heapq.nlargest(2, self.upper, key=lambda x: x.distance_to_point2(self.bottom_center)))
 
@@ -86,7 +86,7 @@ class Ramp:
 
     @cached_property
     def barracks_in_middle(self) -> Optional[Point2]:
-        """ Barracks position in the middle of the 2 depots """
+        """Barracks position in the middle of the 2 depots"""
         if len(self.upper) not in {2, 5}:
             return None
         if len(self.upper2_for_ramp_wall) == 2:
@@ -102,7 +102,7 @@ class Ramp:
 
     @cached_property
     def depot_in_middle(self) -> Optional[Point2]:
-        """ Depot in the middle of the 3 depots """
+        """Depot in the middle of the 3 depots"""
         if len(self.upper) not in {2, 5}:
             return None
         if len(self.upper2_for_ramp_wall) == 2:
@@ -122,7 +122,7 @@ class Ramp:
 
     @cached_property
     def corner_depots(self) -> FrozenSet[Point2]:
-        """ Finds the 2 depot positions on the outside """
+        """Finds the 2 depot positions on the outside"""
         if not self.upper2_for_ramp_wall:
             return frozenset()
         if len(self.upper2_for_ramp_wall) == 2:
@@ -141,7 +141,7 @@ class Ramp:
 
     @cached_property
     def barracks_can_fit_addon(self) -> bool:
-        """ Test if a barracks can fit an addon at natural ramp """
+        """Test if a barracks can fit an addon at natural ramp"""
         # https://i.imgur.com/4b2cXHZ.png
         if len(self.upper2_for_ramp_wall) == 2:
             return self.barracks_in_middle.x + 1 > max(self.corner_depots, key=lambda depot: depot.x).x
@@ -150,7 +150,7 @@ class Ramp:
 
     @cached_property
     def barracks_correct_placement(self) -> Optional[Point2]:
-        """ Corrected placement so that an addon can fit """
+        """Corrected placement so that an addon can fit"""
         if self.barracks_in_middle is None:
             return None
         if len(self.upper2_for_ramp_wall) == 2:
@@ -217,7 +217,6 @@ class Ramp:
 
 
 class GameInfo:
-
     def __init__(self, proto):
         self._proto = proto
         self.players: List[Player] = [Player.from_proto(p) for p in self._proto.player_info]
@@ -236,8 +235,7 @@ class GameInfo:
         self.map_ramps: List[Ramp] = None  # Filled later by BotAI._prepare_first_step
         self.vision_blockers: FrozenSet[Point2] = None  # Filled later by BotAI._prepare_first_step
         self.player_races: Dict[int, Race] = {
-            p.player_id: p.race_actual or p.race_requested
-            for p in self._proto.player_info
+            p.player_id: p.race_actual or p.race_requested for p in self._proto.player_info
         }
         self.start_locations: List[Point2] = [
             Point2.from_proto(sl).round(decimals=1) for sl in self._proto.start_raw.start_locations
@@ -251,15 +249,18 @@ class GameInfo:
 
         def equal_height_around(tile):
             # mask to slice array 1 around tile
-            sliced = self.terrain_height.data_numpy[tile[1] - 1:tile[1] + 2, tile[0] - 1:tile[0] + 2]
+            sliced = self.terrain_height.data_numpy[tile[1] - 1 : tile[1] + 2, tile[0] - 1 : tile[0] + 2]
             return len(np.unique(sliced)) == 1
 
         map_area = self.playable_area
         # all points in the playable area that are pathable but not placable
         points = [
-            Point2((a, b)) for (b, a), value in np.ndenumerate(self.pathing_grid.data_numpy)
-            if value == 1 and map_area.x <= a < map_area.x + map_area.width and map_area.y <= b < map_area.y +
-            map_area.height and self.placement_grid[(a, b)] == 0
+            Point2((a, b))
+            for (b, a), value in np.ndenumerate(self.pathing_grid.data_numpy)
+            if value == 1
+            and map_area.x <= a < map_area.x + map_area.width
+            and map_area.y <= b < map_area.y + map_area.height
+            and self.placement_grid[(a, b)] == 0
         ]
         # divide points into ramp points and vision blockers
         ramp_points = [point for point in points if not equal_height_around(point)]

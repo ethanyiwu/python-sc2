@@ -3,7 +3,6 @@ from sc2.data import Result
 
 
 class CompetitiveBot(BotAI):
-
     async def on_start(self):
         print("Game started")
         # Do things here before the game starts

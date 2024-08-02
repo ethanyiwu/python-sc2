@@ -21,7 +21,6 @@ def get(name: str) -> Map:
 
 
 class Map:
-
     def __init__(self, path: Path):
         self.path = path
 

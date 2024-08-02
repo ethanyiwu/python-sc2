@@ -9,7 +9,6 @@ from sc2.protocol import Protocol
 
 
 class Controller(Protocol):
-
     def __init__(self, ws, process):
         super().__init__(ws)
         self._process = process
@@ -46,13 +45,13 @@ class Controller(Protocol):
         return result
 
     async def request_save_map(self, download_path: str):
-        """ Not working on linux. """
+        """Not working on linux."""
         req = sc_pb.RequestSaveMap(map_path=download_path)
         result = await self._execute(save_map=req)
         return result
 
     async def request_replay_info(self, replay_path: str):
-        """ Not working on linux. """
+        """Not working on linux."""
         req = sc_pb.RequestReplayInfo(replay_path=replay_path, download_data=False)
         result = await self._execute(replay_info=req)
         return result

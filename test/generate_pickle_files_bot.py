@@ -23,7 +23,6 @@ from sc2.protocol import ProtocolError
 
 
 class ExporterBot(BotAI):
-
     def __init__(self):
         BotAI.__init__(self)
         self.map_name: str = None
@@ -78,10 +77,12 @@ class ExporterBot(BotAI):
         valid_units: Set[UnitTypeId] = {
             UnitTypeId(unit_id)
             for unit_id, data in self.game_data.units.items()
-            if data._proto.race != Race.NoRace and data._proto.race != Race.Random and data._proto.available
+            if data._proto.race != Race.NoRace
+            and data._proto.race != Race.Random
+            and data._proto.available
             # Dont cloak units
-            and UnitTypeId(unit_id) != UnitTypeId.MOTHERSHIP and
-            (data._proto.mineral_cost or data._proto.movement_speed or data._proto.weapons)
+            and UnitTypeId(unit_id) != UnitTypeId.MOTHERSHIP
+            and (data._proto.mineral_cost or data._proto.movement_speed or data._proto.weapons)
         }
 
         # Create units for self
@@ -100,7 +101,6 @@ class ExporterBot(BotAI):
 
 
 def main():
-
     maps_ = [
         "16-BitLE",
         "2000AtmospheresAIE",

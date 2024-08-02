@@ -108,8 +108,8 @@ class TestClass:
             len(bot.expansion_locations_list) % (len(bot.enemy_start_locations) + 1) == expect_even_expansion_count
         ), f"{bot.expansion_locations_list}"
         # Test if bot start location is in expansion locations
-        assert bot.townhalls.random.position in set(
-            bot.expansion_locations_list
+        assert (
+            bot.townhalls.random.position in set(bot.expansion_locations_list)
         ), f'This error might occur if you are running the tests locally using command "pytest test/", possibly because you are using an outdated cache.py version, but it should not occur when using docker and poetry.\n{bot.townhalls.random.position}, {bot.expansion_locations_list}'
         # Test if enemy start locations are in expansion locations
         for location in bot.enemy_start_locations:

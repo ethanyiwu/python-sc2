@@ -29,7 +29,6 @@ from sc2.units import Units
 
 # pylint: disable=W0231
 class WorkerStackBot(BotAI):
-
     def __init__(self):
         self.worker_to_mineral_patch_dict: Dict[int, int] = {}
         self.mineral_patch_to_list_of_workers: Dict[int, Set[int]] = {}
@@ -44,10 +43,9 @@ class WorkerStackBot(BotAI):
         await self.assign_workers()
 
     async def assign_workers(self):
-        self.minerals_sorted_by_distance = self.mineral_field.closer_than(10,
-                                                                          self.start_location).sorted_by_distance_to(
-                                                                              self.start_location
-                                                                          )
+        self.minerals_sorted_by_distance = self.mineral_field.closer_than(
+            10, self.start_location
+        ).sorted_by_distance_to(self.start_location)
 
         # Assign workers to mineral patch, start with the mineral patch closest to base
         for mineral in self.minerals_sorted_by_distance:
@@ -107,8 +105,7 @@ class WorkerStackBot(BotAI):
 def main():
     run_game(
         maps.get("AcropolisLE"),
-        [Bot(Race.Protoss, WorkerStackBot()),
-         Computer(Race.Terran, Difficulty.Medium)],
+        [Bot(Race.Protoss, WorkerStackBot()), Computer(Race.Terran, Difficulty.Medium)],
         realtime=False,
         random_seed=0,
     )

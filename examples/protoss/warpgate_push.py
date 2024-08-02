@@ -13,7 +13,6 @@ from sc2.player import Bot, Computer
 
 # pylint: disable=W0231
 class WarpGateBot(BotAI):
-
     def __init__(self):
         # Initialize inherited class
         self.proxy_built = False
@@ -92,7 +91,8 @@ class WarpGateBot(BotAI):
 
         # Research warp gate if cybercore is completed
         if (
-            self.structures(UnitTypeId.CYBERNETICSCORE).ready and self.can_afford(AbilityId.RESEARCH_WARPGATE)
+            self.structures(UnitTypeId.CYBERNETICSCORE).ready
+            and self.can_afford(AbilityId.RESEARCH_WARPGATE)
             and self.already_pending_upgrade(UpgradeId.WARPGATERESEARCH) == 0
         ):
             ccore = self.structures(UnitTypeId.CYBERNETICSCORE).ready.first
@@ -118,7 +118,8 @@ class WarpGateBot(BotAI):
 
         # Build proxy pylon
         if (
-            self.structures(UnitTypeId.CYBERNETICSCORE).amount >= 1 and not self.proxy_built
+            self.structures(UnitTypeId.CYBERNETICSCORE).amount >= 1
+            and not self.proxy_built
             and self.can_afford(UnitTypeId.PYLON)
         ):
             p = self.game_info.map_center.towards(self.enemy_start_locations[0], 20)

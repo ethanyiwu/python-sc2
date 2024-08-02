@@ -7,15 +7,8 @@ from sc2.data import AIBuild, Difficulty, PlayerType, Race
 
 
 class AbstractPlayer(ABC):
-
     def __init__(
-        self,
-        p_type: PlayerType,
-        race: Race = None,
-        name: str = None,
-        difficulty=None,
-        ai_build=None,
-        fullscreen=False
+        self, p_type: PlayerType, race: Race = None, name: str = None, difficulty=None, ai_build=None, fullscreen=False
     ):
         assert isinstance(p_type, PlayerType), f"p_type is of type {type(p_type)}"
         assert name is None or isinstance(name, str), f"name is of type {type(name)}"
@@ -49,7 +42,6 @@ class AbstractPlayer(ABC):
 
 
 class Human(AbstractPlayer):
-
     def __init__(self, race, name=None, fullscreen=False):
         super().__init__(PlayerType.Participant, race, name=name, fullscreen=fullscreen)
 
@@ -60,7 +52,6 @@ class Human(AbstractPlayer):
 
 
 class Bot(AbstractPlayer):
-
     def __init__(self, race, ai, name=None, fullscreen=False):
         """
         AI can be None if this player object is just used to inform the
@@ -77,7 +68,6 @@ class Bot(AbstractPlayer):
 
 
 class Computer(AbstractPlayer):
-
     def __init__(self, race, difficulty=Difficulty.Easy, ai_build=AIBuild.RandomBuild):
         super().__init__(PlayerType.Computer, race, difficulty=difficulty, ai_build=ai_build)
 
@@ -86,7 +76,6 @@ class Computer(AbstractPlayer):
 
 
 class Observer(AbstractPlayer):
-
     def __init__(self):
         super().__init__(PlayerType.Observer)
 
@@ -95,7 +84,6 @@ class Observer(AbstractPlayer):
 
 
 class Player(AbstractPlayer):
-
     def __init__(self, player_id, p_type, requested_race, difficulty=None, actual_race=None, name=None, ai_build=None):
         super().__init__(p_type, requested_race, difficulty=difficulty, name=name, ai_build=ai_build)
         self.id: int = player_id
@@ -163,11 +151,9 @@ class BotProcess(AbstractPlayer):
             return f"Bot {self.name}({self.race.name} from {self.launch_list})"
         return f"Bot({self.race.name} from {self.launch_list})"
 
-    def cmd_line(self,
-                 sc2port: Union[int, str],
-                 matchport: Union[int, str],
-                 hostaddress: str,
-                 realtime: bool = False) -> List[str]:
+    def cmd_line(
+        self, sc2port: Union[int, str], matchport: Union[int, str], hostaddress: str, realtime: bool = False
+    ) -> List[str]:
         """
 
         :param sc2port: the port that the launched sc2 instance listens to

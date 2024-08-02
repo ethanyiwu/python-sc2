@@ -14,7 +14,6 @@ from sc2.units import Units
 
 
 class Hydralisk(BotAI):
-
     def select_target(self) -> Point2:
         if self.enemy_structures:
             return random.choice(self.enemy_structures).position
@@ -39,11 +38,13 @@ class Hydralisk(BotAI):
         hydra_dens = self.structures(UnitTypeId.HYDRALISKDEN)
         if hydra_dens:
             for hydra_den in hydra_dens.ready.idle:
-                if self.already_pending_upgrade(UpgradeId.EVOLVEGROOVEDSPINES
-                                                ) == 0 and self.can_afford(UpgradeId.EVOLVEGROOVEDSPINES):
+                if self.already_pending_upgrade(UpgradeId.EVOLVEGROOVEDSPINES) == 0 and self.can_afford(
+                    UpgradeId.EVOLVEGROOVEDSPINES
+                ):
                     hydra_den.research(UpgradeId.EVOLVEGROOVEDSPINES)
-                elif self.already_pending_upgrade(UpgradeId.EVOLVEMUSCULARAUGMENTS
-                                                  ) == 0 and self.can_afford(UpgradeId.EVOLVEMUSCULARAUGMENTS):
+                elif self.already_pending_upgrade(UpgradeId.EVOLVEMUSCULARAUGMENTS) == 0 and self.can_afford(
+                    UpgradeId.EVOLVEMUSCULARAUGMENTS
+                ):
                     hydra_den.research(UpgradeId.EVOLVEMUSCULARAUGMENTS)
 
         # If hydra den is ready, train hydra

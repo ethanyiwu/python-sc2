@@ -22,7 +22,6 @@ on_end_was_called: bool = False
 
 
 class RealTimeTestBot(BotAI):
-
     async def on_before_start(self):
         mf = self.mineral_field
         for w in self.workers:
@@ -36,7 +35,7 @@ class RealTimeTestBot(BotAI):
         await asyncio.sleep(1)
 
     async def on_start(self):
-        """ This function is run after the expansion locations and ramps are calculated. """
+        """This function is run after the expansion locations and ramps are calculated."""
         self.client.game_step = 1
 
     async def on_step(self, iteration):
@@ -103,8 +102,7 @@ class RealTimeTestBot(BotAI):
 def main():
     run_game(
         maps.get("AcropolisLE"),
-        [Bot(Race.Protoss, RealTimeTestBot()),
-         Computer(Race.Terran, Difficulty.Medium)],
+        [Bot(Race.Protoss, RealTimeTestBot()), Computer(Race.Terran, Difficulty.Medium)],
         realtime=True,
         disable_fog=True,
     )

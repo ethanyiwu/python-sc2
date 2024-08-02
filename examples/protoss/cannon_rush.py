@@ -9,7 +9,6 @@ from sc2.player import Bot, Computer
 
 
 class CannonRushBot(BotAI):
-
     # pylint: disable=R0912
     async def on_step(self, iteration):
         if iteration == 0:
@@ -64,8 +63,7 @@ class CannonRushBot(BotAI):
 def main():
     run_game(
         maps.get("(2)CatalystLE"),
-        [Bot(Race.Protoss, CannonRushBot(), name="CheeseCannon"),
-         Computer(Race.Protoss, Difficulty.Medium)],
+        [Bot(Race.Protoss, CannonRushBot(), name="CheeseCannon"), Computer(Race.Protoss, Difficulty.Medium)],
         realtime=False,
     )
 

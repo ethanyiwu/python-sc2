@@ -115,5 +115,5 @@ UNIT_TRAINED_FROM: Dict[UnitTypeId, Set[UnitTypeId]] = {
     UnitTypeId.WARPPRISM: {UnitTypeId.ROBOTICSFACILITY},
     UnitTypeId.WIDOWMINE: {UnitTypeId.FACTORY},
     UnitTypeId.ZEALOT: {UnitTypeId.GATEWAY, UnitTypeId.WARPGATE},
-    UnitTypeId.ZERGLING: {UnitTypeId.LARVA}
+    UnitTypeId.ZERGLING: {UnitTypeId.LARVA},
 }

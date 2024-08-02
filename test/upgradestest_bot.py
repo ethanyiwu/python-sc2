@@ -20,7 +20,6 @@ from sc2.units import Units
 
 
 class TestBot(BotAI):
-
     def __init__(self):
         BotAI.__init__(self)
         # The time the bot has to complete all tests, here: the number of game seconds
@@ -29,7 +28,8 @@ class TestBot(BotAI):
         # Check how many test action functions we have
         # At least 4 tests because we test properties and variables
         self.action_tests = [
-            getattr(self, f"test_botai_actions{index}") for index in range(4000)
+            getattr(self, f"test_botai_actions{index}")
+            for index in range(4000)
             if hasattr(getattr(self, f"test_botai_actions{index}", 0), "__call__")
         ]
         self.tests_done_by_name = set()
@@ -109,7 +109,6 @@ class TestBot(BotAI):
             structure_upgrade_types: Dict[UpgradeId, Dict[str, AbilityId]] = RESEARCH_INFO[structure_type]
             data: Dict[str, AbilityId]
             for upgrade_id, data in structure_upgrade_types.items():
-
                 # Collect data to spawn
                 research_ability: AbilityId = data.get("ability", None)
                 requires_power: bool = data.get("requires_power", False)
@@ -174,7 +173,6 @@ class TestBot(BotAI):
 
 
 class EmptyBot(BotAI):
-
     async def on_start(self):
         if self.units:
             await self.client.debug_kill_unit(self.units)

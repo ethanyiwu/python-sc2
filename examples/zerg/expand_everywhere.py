@@ -13,7 +13,6 @@ from sc2.unit import Unit
 
 
 class ExpandEverywhere(BotAI):
-
     async def on_start(self):
         self.client.game_step = 50
         await self.client.debug_show_map()
@@ -21,7 +20,9 @@ class ExpandEverywhere(BotAI):
     async def on_step(self, iteration):
         # Build overlords if about to be supply blocked
         if (
-            self.supply_left < 2 and self.supply_cap < 200 and self.already_pending(UnitTypeId.OVERLORD) < 2
+            self.supply_left < 2
+            and self.supply_cap < 200
+            and self.already_pending(UnitTypeId.OVERLORD) < 2
             and self.can_afford(UnitTypeId.OVERLORD)
         ):
             self.train(UnitTypeId.OVERLORD)
@@ -29,8 +30,8 @@ class ExpandEverywhere(BotAI):
         # While we have less than 16 drones, make more drones
         if (
             self.can_afford(UnitTypeId.DRONE)
-            and self.supply_workers - self.worker_en_route_to_build(UnitTypeId.HATCHERY) <
-            (self.townhalls.amount + self.placeholders(UnitTypeId.HATCHERY).amount) * 16
+            and self.supply_workers - self.worker_en_route_to_build(UnitTypeId.HATCHERY)
+            < (self.townhalls.amount + self.placeholders(UnitTypeId.HATCHERY).amount) * 16
         ):
             self.train(UnitTypeId.DRONE)
 
@@ -61,7 +62,7 @@ class ExpandEverywhere(BotAI):
             await self.client.debug_kill_unit(self.enemy_units)
 
     async def on_building_construction_complete(self, unit: Unit):
-        """ Set rally point of new hatcheries. """
+        """Set rally point of new hatcheries."""
         if unit.type_id == UnitTypeId.HATCHERY and self.mineral_field:
             mf = self.mineral_field.closest_to(unit)
             unit.smart(mf)
@@ -70,8 +71,7 @@ class ExpandEverywhere(BotAI):
 def main():
     run_game(
         maps.get("AcropolisLE"),
-        [Bot(Race.Zerg, ExpandEverywhere()),
-         Computer(Race.Terran, Difficulty.Medium)],
+        [Bot(Race.Zerg, ExpandEverywhere()), Computer(Race.Terran, Difficulty.Medium)],
         realtime=False,
         save_replay_as="ZvT.SC2Replay",
     )
