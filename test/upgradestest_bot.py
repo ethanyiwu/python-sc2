@@ -153,7 +153,7 @@ class TestBot(BotAI):
                     await self._advance_steps(2)
 
                 # Research upgrade
-                assert upgrade_id in upgrade_types, f"Given upgrade is not in the list of upgrade types"
+                assert upgrade_id in upgrade_types, "Given upgrade is not in the list of upgrade types"
                 assert self.structures(structure_type), f"Structure {structure_type} has not been spawned in time"
 
                 # Try to research the upgrade

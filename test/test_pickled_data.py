@@ -910,7 +910,7 @@ def test_exact_creation_ability():
         from sc2.dicts.unit_abilities import UNIT_ABILITIES
         from sc2.dicts.unit_unit_alias import UNIT_UNIT_ALIAS
     except ImportError:
-        logger.info(f"Import error: dict sc2/dicts/ are missing!")
+        logger.info("Import error: dict sc2/dicts/ are missing!")
         return
     test_case = unittest.TestCase()
     bot: BotAI = get_map_specific_bot(random.choice(MAPS))
@@ -965,7 +965,7 @@ def test_dicts():
     try:
         from sc2.dicts.unit_research_abilities import RESEARCH_INFO
     except ImportError:
-        logger.info(f"Import error: dict sc2/dicts/unit_research_abilities.py is missing!")
+        logger.info("Import error: dict sc2/dicts/unit_research_abilities.py is missing!")
         return
 
     bot: BotAI = get_map_specific_bot(random.choice(MAPS))

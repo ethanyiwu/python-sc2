@@ -38,7 +38,7 @@ class BatteryOverchargeBot(BotAI):
                         nexus(AbilityId.BATTERYOVERCHARGE_BATTERYOVERCHARGE, battery)
 
         if iteration > 20:
-            logger.warning(f"Success, bot did not crash. Exiting bot.")
+            logger.warning("Success, bot did not crash. Exiting bot.")
             await self.client.leave()
 
 

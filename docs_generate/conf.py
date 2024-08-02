@@ -15,7 +15,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
-import sphinx_rtd_theme  # nopycln: import
+import sphinx_rtd_theme
+
+sphinx_rtd_theme  # Add statement to keep unused import
 
 # -- Project information -----------------------------------------------------
 
