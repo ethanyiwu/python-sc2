@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 from contextlib import suppress
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import aiohttp
@@ -20,7 +21,7 @@ from sc2.paths import Paths
 from sc2.versions import VERSIONS
 
 
-class kill_switch:
+class KillSwitch:
     _to_kill: List[Any] = []
 
     @classmethod
@@ -94,12 +95,12 @@ class SC2Process:
         self._data_hash = data_hash
 
     async def __aenter__(self) -> Controller:
-        kill_switch.add(self)
+        KillSwitch.add(self)
 
         def signal_handler(*_args):
             # unused arguments: signal handling library expects all signal
             # callback handlers to accept two positional arguments
-            kill_switch.kill_all()
+            KillSwitch.kill_all()
 
         signal.signal(signal.SIGINT, signal_handler)
 
@@ -115,7 +116,7 @@ class SC2Process:
 
     async def __aexit__(self, *args):
         await self._close_connection()
-        kill_switch.kill_all()
+        KillSwitch.kill_all()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     @property
@@ -162,10 +163,7 @@ class SC2Process:
 
             def special_match(strg: str):
                 """Tests if the specified version is in the versions.py dict."""
-                for version in self.versions:
-                    if version["label"] == strg:
-                        return True
-                return False
+                return any(version["label"] == strg for version in self.versions)
 
             valid_version_string = special_match(self._sc2_version)
             if valid_version_string:
@@ -258,11 +256,10 @@ class SC2Process:
             # Try to kill wineserver on linux
             if paths.PF in {"Linux", "WineLinux"}:
                 # Command wineserver not detected
-                with suppress(FileNotFoundError):
-                    with subprocess.Popen(["wineserver", "-k"]) as p:
-                        p.wait()
+                with suppress(FileNotFoundError), subprocess.Popen(["wineserver", "-k"]) as p:
+                    p.wait()
 
-        if os.path.exists(self._tmp_dir):
+        if Path(self._tmp_dir).exists():
             shutil.rmtree(self._tmp_dir)
 
         self._process = None

@@ -1,10 +1,10 @@
 """
 This script makes sure to run all bots in the examples folder to check if they can launch against each other.
 """
-import os
 import sys
+from pathlib import Path
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(Path(__file__).parent)
 import asyncio
 from importlib import import_module
 from itertools import combinations

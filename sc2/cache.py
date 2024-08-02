@@ -17,7 +17,7 @@ class CacheDict(dict):
         return self[key]
 
 
-class property_cache_once_per_frame(property):
+class property_cache_once_per_frame(property):  # noqa: N801
     """This decorator caches the return value for one game loop,
     then clears it if it is accessed in a different game loop.
     Only works on properties of the bot object, because it requires

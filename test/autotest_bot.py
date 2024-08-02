@@ -1,7 +1,7 @@
-import os
 import sys
+from pathlib import Path
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(Path(__file__).parent)
 
 from loguru import logger
 
@@ -68,7 +68,7 @@ class TestBot(BotAI):
 
         # Exit bot
         if iteration > 100:
-            logger.info("Tests completed after {} seconds".format(round(self.time, 1)))
+            logger.info(f"Tests completed after {round(self.time, 1)} seconds")
             exit(0)
 
     async def clean_up_center(self):
@@ -375,11 +375,8 @@ class TestBot(BotAI):
             bane_cocoons = self.units(UnitTypeId.BANELINGCOCOON)
 
             # Cheat money, need 10k/10k to morph 400 lings to 400 banes
-            if not banes and not bane_cocoons:
-                if self.minerals < 10_000:
-                    await self.client.debug_all_resources()
-                elif self.vespene < 10_000:
-                    await self.client.debug_all_resources()
+            if not banes and not bane_cocoons and (self.minerals < 10_000 or self.vespene < 10_000):
+                await self.client.debug_all_resources()
 
             # Spawn units
             if not bane_nests:

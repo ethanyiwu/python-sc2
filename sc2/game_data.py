@@ -25,7 +25,7 @@ class GameData:
         """
         :param data:
         """
-        ids = set(a.value for a in AbilityId if a.value != 0)
+        ids = {a.value for a in AbilityId if a.value != 0}
         self.abilities: Dict[int, AbilityData] = {
             a.ability_id: AbilityData(self, a) for a in data.abilities if a.ability_id in ids
         }

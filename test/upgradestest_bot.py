@@ -1,7 +1,7 @@
-import os
 import sys
+from pathlib import Path
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(Path(__file__).parent)
 from typing import Dict, List
 
 from loguru import logger
@@ -63,7 +63,7 @@ class TestBot(BotAI):
 
         # Exit bot
         if iteration > 100:
-            logger.info("Tests completed after {} seconds".format(round(self.time, 1)))
+            logger.info(f"Tests completed after {round(self.time, 1)} seconds")
             exit(0)
 
     async def clean_up_center(self):

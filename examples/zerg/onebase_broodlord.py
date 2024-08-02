@@ -1,3 +1,4 @@
+# noqa: SIM102
 import random
 
 from sc2 import maps

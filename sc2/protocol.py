@@ -15,7 +15,7 @@ class ProtocolError(Exception):
         return self.args[0] in ["['Game has already ended']", "['Not supported if game has already ended']"]
 
 
-class ConnectionAlreadyClosed(ProtocolError):
+class ConnectionAlreadyClosedError(ProtocolError):
     pass
 
 
@@ -35,7 +35,7 @@ class Protocol:
             await self._ws.send_bytes(request.SerializeToString())
         except TypeError as exc:
             logger.exception("Cannot send: Connection already closed.")
-            raise ConnectionAlreadyClosed("Connection already closed.") from exc
+            raise ConnectionAlreadyClosedError("Connection already closed.") from exc
         logger.debug("Request sent")
 
         response = sc_pb.Response()
@@ -44,9 +44,9 @@ class Protocol:
         except TypeError as exc:
             if self._status == Status.ended:
                 logger.info("Cannot receive: Game has already ended.")
-                raise ConnectionAlreadyClosed("Game has already ended") from exc
+                raise ConnectionAlreadyClosedError("Game has already ended") from exc
             logger.error("Cannot receive: Connection already closed.")
-            raise ConnectionAlreadyClosed("Connection already closed.") from exc
+            raise ConnectionAlreadyClosedError("Connection already closed.") from exc
         except asyncio.CancelledError:
             # If request is sent, the response must be received before reraising cancel
             try:
@@ -81,5 +81,5 @@ class Protocol:
         return result
 
     async def quit(self):
-        with suppress(ConnectionAlreadyClosed, ConnectionResetError):
+        with suppress(ConnectionAlreadyClosedError, ConnectionResetError):
             await self._execute(quit=sc_pb.RequestQuit())

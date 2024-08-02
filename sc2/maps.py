@@ -39,7 +39,7 @@ class Map:
 
     @property
     def data(self):
-        with open(self.path, "rb") as f:
+        with Path(self.path).open("rb") as f:
             return f.read()
 
     def __repr__(self):

@@ -108,7 +108,7 @@ class PixelMap:
         from PIL import Image
 
         im = Image.new("RGB", (self.width, self.height))
-        im.putdata(data)  # type: ignore
+        im.putdata(data)
         im.save(filename)
 
     def plot(self):

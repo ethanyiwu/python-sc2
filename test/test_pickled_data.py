@@ -72,7 +72,7 @@ def get_map_specific_bot(map_path: Path) -> BotAI:
 def test_protobuf_implementation():
     """Make sure that cpp is used as implementation"""
     # Doesn't seem to be implemented in newer python versions
-    if sys.version_info.major == 3 and sys.version_info.minor < 10:
+    if sys.version_info < (3, 10):
         assert api_implementation.Type() == "cpp"
 
 
@@ -175,7 +175,7 @@ def test_bot_ai():
     assert bot.already_pending_upgrade(UpgradeId.STIMPACK) == 0
     assert bot.already_pending(UpgradeId.STIMPACK) == 0
     assert bot.already_pending(UnitTypeId.SCV) == 0
-    assert 0 < bot.get_terrain_height(worker)
+    assert bot.get_terrain_height(worker) > 0
     assert bot.in_placement_grid(worker)
     assert bot.in_pathing_grid(worker)
     # The pickle data was created by a terran bot, so there is no creep under any worker
@@ -937,7 +937,7 @@ def test_exact_creation_ability():
     }
 
     unit_types = list(UNIT_UNIT_ALIAS) + list(UNIT_UNIT_ALIAS.values()) + list(UNIT_ABILITIES) + list(ALL_GAS)
-    unit_types_unique_sorted = sorted(set(t.name for t in unit_types))
+    unit_types_unique_sorted = sorted({t.name for t in unit_types})
     for unit_type_name in unit_types_unique_sorted:
         unit_type = UnitTypeId[unit_type_name]
         if unit_type in ignore_types:
@@ -1025,7 +1025,7 @@ def test_position_pointlike(x1, y1, x2, y2, x3, y3):
         if pos1 != pos2:
             assert pos1.unit_axes_towards(pos2) != Point2((0, 0))
 
-        if 0 < x3:
+        if x3 > 0:
             temp_pos = pos1.towards(pos2, x3)
             if x3 <= pos1.distance_to(pos2):
                 # Using "towards" function to go between pos1 and pos2
@@ -1082,7 +1082,7 @@ def test_position_point2(x1, y1, x2, y2):
 
     assert isinstance(pos1.distance_to(pos2), float)
     assert isinstance(pos1.distance_to_point2(pos2), float)
-    if 0 < x2:
+    if x2 > 0:
         assert pos1.random_on_distance(x2) != pos1
         assert pos1.towards_with_random_angle(pos2, x2) != pos1
     assert pos1.towards_with_random_angle(pos2) != pos1

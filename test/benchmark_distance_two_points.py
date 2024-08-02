@@ -10,7 +10,7 @@ from scipy.spatial import distance as scipydistance
 from sc2.position import Point2
 
 PYTHON_VERSION = platform.python_version_tuple()
-USING_PYTHON_3_8: bool = ("3", "8") <= PYTHON_VERSION
+USING_PYTHON_3_8: bool = PYTHON_VERSION >= ("3", "8")
 
 
 def distance_to_python_raw(s, p):

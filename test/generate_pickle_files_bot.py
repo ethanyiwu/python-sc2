@@ -3,8 +3,8 @@ This "bot" will loop over several available ladder maps and generate the pickle 
 These will then be used to run tests from the test script "test_pickled_data.py"
 """
 import lzma
-import os
 import pickle
+from pathlib import Path
 from typing import Set
 
 from loguru import logger
@@ -31,17 +31,17 @@ class ExporterBot(BotAI):
         pass
 
     def get_pickle_file_path(self) -> str:
-        folder_path = os.path.dirname(__file__)
+        folder_path = Path(__file__).parent
         subfolder_name = "pickle_data"
         file_name = f"{self.map_name}.xz"
-        file_path = os.path.join(folder_path, subfolder_name, file_name)
+        file_path = folder_path / subfolder_name / file_name
         return file_path
 
     def get_combat_file_path(self) -> str:
-        folder_path = os.path.dirname(__file__)
+        folder_path = Path(__file__).parent
         subfolder_name = "combat_data"
         file_name = f"{self.map_name}.xz"
-        file_path = os.path.join(folder_path, subfolder_name, file_name)
+        file_path = folder_path / subfolder_name / file_name
         return file_path
 
     async def store_data_to_file(self, file_path: str):
@@ -59,7 +59,7 @@ class ExporterBot(BotAI):
         _game_info = GameInfo(raw_game_info.game_info)
         _game_state = GameState(raw_observation)
 
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        Path(file_path).parent.mkdir(exist_ok=True, parents=True)
         with lzma.open(file_path, "wb") as f:
             pickle.dump([raw_game_data, raw_game_info, raw_observation], f)
 
@@ -211,7 +211,7 @@ def main():
             bot = ExporterBot()
             bot.map_name = map_
             file_path = bot.get_pickle_file_path()
-            if os.path.isfile(file_path):
+            if Path(file_path).is_file():
                 logger.warning(
                     f"Pickle file for map {map_} was already generated. Skipping. If you wish to re-generate files, please remove them first."
                 )

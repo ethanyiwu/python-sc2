@@ -589,18 +589,14 @@ class Unit:
         assert cast_range > 0, f"Checking for an ability ({ability_id}) that has no cast range"
         ability_target_type = self._bot_object.game_data.abilities[ability_id.value]._proto.target
         # For casting abilities that target other units, like transfuse, feedback, snipe, yamato
-        if (
-            ability_target_type in {Target.Unit.value, Target.PointOrUnit.value}  # type: ignore
-            and isinstance(target, Unit)
-        ):
+        if ability_target_type in {Target.Unit.value, Target.PointOrUnit.value} and isinstance(target, Unit):
             return (
                 self._bot_object._distance_squared_unit_to_unit(self, target)
                 <= (cast_range + self.radius + target.radius + bonus_distance) ** 2
             )
         # For casting abilities on the ground, like queen creep tumor, ravager bile, HT storm
-        if (
-            ability_target_type in {Target.Point.value, Target.PointOrUnit.value}  # type: ignore
-            and isinstance(target, (Point2, tuple))
+        if ability_target_type in {Target.Point.value, Target.PointOrUnit.value} and isinstance(
+            target, (Point2, tuple)
         ):
             return (
                 self._bot_object._distance_pos_to_pos(self.position_tuple, target)
@@ -675,12 +671,11 @@ class Unit:
             return weapon_damage, 0.224, 6
 
         # Fast return for bunkers, since they don't have a weapon similar to BCs
-        if self.type_id == UnitTypeId.BUNKER:
-            if self.is_enemy:
-                if self.is_active:
-                    # Expect fully loaded bunker with marines
-                    return (24, 0.854, 6)
-                return (0, 0, 0)
+        if self.type_id == UnitTypeId.BUNKER and self.is_enemy:
+            if self.is_active:
+                # Expect fully loaded bunker with marines
+                return (24, 0.854, 6)
+            return (0, 0, 0)
             # TODO if bunker belongs to us, use passengers and upgrade level to calculate damage
 
         required_target_type: Set[int] = (

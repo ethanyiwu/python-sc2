@@ -5,6 +5,7 @@ import platform
 import subprocess
 import time
 import traceback
+from pathlib import Path
 
 from aiohttp import WSMsgType, web
 from loguru import logger
@@ -91,23 +92,19 @@ class Proxy:
                 logger.info(f"Controller({self.player.name}): {self.controller._status}->{new_status}")
                 self.controller._status = new_status
 
-        if self.player_id is None:
-            if response.HasField("join_game"):
-                self.player_id = response.join_game.player_id
-                logger.info(f"Proxy({self.player.name}): got join_game for {self.player_id}")
+        if self.player_id is None and response.HasField("join_game"):
+            self.player_id = response.join_game.player_id
+            logger.info(f"Proxy({self.player.name}): got join_game for {self.player_id}")
 
-        if self.result is None:
-            if response.HasField("observation"):
-                obs: sc_pb.ResponseObservation = response.observation
-                if obs.player_result:
-                    self.result = {pr.player_id: Result(pr.result) for pr in obs.player_result}
-                elif (
-                    self.timeout_loop and obs.HasField("observation") and obs.observation.game_loop > self.timeout_loop
-                ):
-                    self.result = {i: Result.Tie for i in range(1, 3)}
-                    logger.info(f"Proxy({self.player.name}) timing out")
-                    act = [sc_pb.Action(action_chat=sc_pb.ActionChat(message="Proxy: Timing out"))]
-                    await self.controller._execute(action=sc_pb.RequestAction(actions=act))
+        if self.result is None and response.HasField("observation"):
+            obs: sc_pb.ResponseObservation = response.observation
+            if obs.player_result:
+                self.result = {pr.player_id: Result(pr.result) for pr in obs.player_result}
+            elif self.timeout_loop and obs.HasField("observation") and obs.observation.game_loop > self.timeout_loop:
+                self.result = {i: Result.Tie for i in range(1, 3)}
+                logger.info(f"Proxy({self.player.name}) timing out")
+                act = [sc_pb.Action(action_chat=sc_pb.ActionChat(message="Proxy: Timing out"))]
+                await self.controller._execute(action=sc_pb.RequestAction(actions=act))
         return response
 
     async def get_result(self):
@@ -184,7 +181,7 @@ class Proxy:
         if self.player.stdout is None:
             bot_process = subprocess.Popen(player_command_line, stdout=subprocess.DEVNULL, **subproc_args)
         else:
-            with open(self.player.stdout, "w+") as out:
+            with Path(self.player.stdout).open("w+") as out:
                 bot_process = subprocess.Popen(player_command_line, stdout=out, **subproc_args)
 
         while self.result is None:
@@ -208,8 +205,8 @@ class Proxy:
             if isinstance(bot_process, subprocess.Popen):
                 if bot_process.stdout and not bot_process.stdout.closed:  # should not run anymore
                     logger.info(f"==================output for player {self.player.name}")
-                    for l in bot_process.stdout.readlines():
-                        logger.opt(raw=True).info(l.decode("utf-8"))
+                    for line in bot_process.stdout.readlines():
+                        logger.opt(raw=True).info(line.decode("utf-8"))
                     bot_process.stdout.close()
                     logger.info("==================")
                 bot_process.terminate()

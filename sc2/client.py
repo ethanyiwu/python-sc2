@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Set, Tuple, Union
 
 from loguru import logger
@@ -16,7 +17,7 @@ from sc2.game_info import GameInfo
 from sc2.ids.ability_id import AbilityId
 from sc2.ids.unit_typeid import UnitTypeId
 from sc2.position import Point2, Point3
-from sc2.protocol import ConnectionAlreadyClosed, Protocol, ProtocolError
+from sc2.protocol import ConnectionAlreadyClosedError, Protocol, ProtocolError
 from sc2.renderer import Renderer
 from sc2.unit import Unit
 from sc2.units import Units
@@ -114,14 +115,14 @@ class Client(Protocol):
                 await self.save_replay(self.save_replay_path)
                 self.save_replay_path = None
             await self._execute(leave_game=sc_pb.RequestLeaveGame())
-        except (ProtocolError, ConnectionAlreadyClosed):
+        except (ProtocolError, ConnectionAlreadyClosedError):
             if is_resign:
                 raise
 
     async def save_replay(self, path):
         logger.debug("Requesting replay from server")
         result = await self._execute(save_replay=sc_pb.RequestSaveReplay())
-        with open(path, "wb") as f:
+        with Path(path).open("wb") as f:
             f.write(result.save_replay.data)
         logger.info(f"Saved replay to {path}")
 
@@ -177,7 +178,7 @@ class Client(Protocol):
                 effect_id=effect_id,
             )
         )
-        with open("data_dump.txt", "a") as file:
+        with Path("data_dump.txt").open("a") as file:
             file.write(str(result.data))
 
     async def get_game_info(self) -> GameInfo:

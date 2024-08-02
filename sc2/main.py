@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
 import platform
 import signal
 import sys
@@ -27,9 +26,9 @@ from sc2.game_state import GameState
 from sc2.maps import Map
 from sc2.player import AbstractPlayer, Bot, BotProcess, Human
 from sc2.portconfig import Portconfig
-from sc2.protocol import ConnectionAlreadyClosed, ProtocolError
+from sc2.protocol import ConnectionAlreadyClosedError, ProtocolError
 from sc2.proxy import Proxy
-from sc2.sc2process import SC2Process, kill_switch
+from sc2.sc2process import KillSwitch, SC2Process
 
 # Set the global logging level
 logger.remove()
@@ -308,10 +307,9 @@ async def _play_replay(client, ai, realtime=False, player_id=0):
 
         logger.debug("Running AI step: done")
 
-        if not realtime:
-            if not client.in_game:  # Client left (resigned) the game
-                await ai.on_end(Result.Victory)
-                return Result.Victory
+        if not realtime and not client.in_game:  # Client left (resigned) the game
+            await ai.on_end(Result.Victory)
+            return Result.Victory
 
         await client.step()  # unindent one line to work in realtime
 
@@ -365,7 +363,7 @@ async def _host_game(
             await client.save_replay(client.save_replay_path)
         try:
             await client.leave()
-        except ConnectionAlreadyClosed:
+        except ConnectionAlreadyClosedError:
             logger.error("Connection was closed before the game ended")
         await client.quit()
 
@@ -398,7 +396,7 @@ async def _host_game_aiter(
                 if save_replay_as is not None:
                     await client.save_replay(save_replay_as)
                 await client.leave()
-            except ConnectionAlreadyClosed:
+            except ConnectionAlreadyClosedError:
                 logger.error("Connection was closed before the game ended")
                 return
 
@@ -434,7 +432,7 @@ async def _join_game(
             await client.save_replay(save_replay_as)
         try:
             await client.leave()
-        except ConnectionAlreadyClosed:
+        except ConnectionAlreadyClosedError:
             logger.error("Connection was closed before the game ended")
         await client.quit()
 
@@ -454,7 +452,7 @@ async def _host_replay(replay_path, ai, realtime, _portconfig, base_build, data_
 
 
 def get_replay_version(replay_path: Union[str, Path]) -> Tuple[str, str]:
-    with open(replay_path, "rb") as f:
+    with Path(replay_path).open("rb") as f:
         replay_data = f.read()
         replay_io = BytesIO()
         replay_io.write(replay_data)
@@ -494,10 +492,10 @@ def run_game(map_settings, players, **kwargs) -> Union[Result, List[Optional[Res
 
 def run_replay(ai, replay_path, realtime=False, observed_id=0):
     portconfig = Portconfig()
-    assert os.path.isfile(replay_path), f"Replay does not exist at the given path: {replay_path}"
-    assert os.path.isabs(
+    assert Path(replay_path).is_file(), f"Replay does not exist at the given path: {replay_path}"
+    assert Path(
         replay_path
-    ), f'Replay path has to be an absolute path, e.g. "C:/replays/my_replay.SC2Replay" but given path was "{replay_path}"'
+    ).is_absolute(), f'Replay path has to be an absolute path, e.g. "C:/replays/my_replay.SC2Replay" but given path was "{replay_path}"'
     base_build, data_version = get_replay_version(replay_path)
     result = asyncio.get_event_loop().run_until_complete(
         _host_replay(replay_path, ai, realtime, portconfig, base_build, data_version, observed_id)
@@ -531,7 +529,7 @@ async def play_from_websocket(
         result = await _play_game(player, client, realtime, portconfig, game_time_limit=game_time_limit)
         if save_replay_as is not None:
             await client.save_replay(save_replay_as)
-    except ConnectionAlreadyClosed:
+    except ConnectionAlreadyClosedError:
         logger.error("Connection was closed before the game ended")
         return None
     finally:
@@ -633,8 +631,8 @@ async def maintain_SCII_count(count: int, controllers: List[Controller], proc_ar
                 i += 1
         for c in to_remove:
             c._process._clean(verbose=False)
-            if c._process in kill_switch._to_kill:
-                kill_switch._to_kill.remove(c._process)
+            if c._process in KillSwitch._to_kill:
+                KillSwitch._to_kill.remove(c._process)
             controllers.remove(c)
 
     # spawn more
@@ -678,8 +676,8 @@ async def maintain_SCII_count(count: int, controllers: List[Controller], proc_ar
         logger.info(f"Removing SCII listening to {proc._port}")
         await proc._close_connection()
         proc._clean(verbose=False)
-        if proc in kill_switch._to_kill:
-            kill_switch._to_kill.remove(proc)
+        if proc in KillSwitch._to_kill:
+            KillSwitch._to_kill.remove(proc)
 
 
 def run_multiple_games(matches: List[GameMatch]):
@@ -713,7 +711,7 @@ async def a_run_multiple_games(matches: List[GameMatch]) -> List[Dict[AbstractPl
             if dont_restart:  # Keeping them alive after a non-computer match can cause crashes
                 await maintain_SCII_count(0, controllers, m.sc2_config)
             results.append(result)
-    kill_switch.kill_all()
+    KillSwitch.kill_all()
     return results
 
 
@@ -756,7 +754,7 @@ async def a_run_multiple_games_nokill(matches: List[GameMatch]) -> List[Dict[Abs
 
     # Fire the killswitch manually, instead of letting the winning player fire it.
     await asyncio.wait_for(asyncio.gather(*(c._process._close_connection() for c in controllers)), timeout=50)
-    kill_switch.kill_all()
+    KillSwitch.kill_all()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     return results

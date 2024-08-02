@@ -71,8 +71,8 @@ if len(sys.argv) > 1:
         sys.exit(5)
 
     # process.returncode will always return 0 if the game was run successfully or if there was a python error (in this case it returns as defeat)
-    logger.info("Returncode: {}".format(process.returncode))
-    logger.info("Game took {} real time seconds".format(round(time.time() - t0, 1)))
+    logger.info(f"Returncode: {process.returncode}")
+    logger.info(f"Game took {round(time.time() - t0, 1)} real time seconds")
     if process is not None and process.returncode == 0:
         for line in output_as_list:
             # This will throw an error even if a bot is called Traceback

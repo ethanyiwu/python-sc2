@@ -7,7 +7,7 @@ license = "MIT"
 homepage = "https://github.com/Burnysc2/python-sc2"
 documentation = "https://burnysc2.github.io/python-sc2/docs/index.html"
 keywords = ["StarCraft", "StarCraft 2", "StarCraft II", "AI", "Bot"]
-classifiers=[
+classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
@@ -25,9 +25,7 @@ classifiers=[
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-packages = [
-    { include = "sc2/**/*.py" },
-]
+packages = [{ include = "sc2/**/*.py" }]
 
 [tool.poetry.dependencies]
 python = ">=3.9, <3.13"
@@ -92,6 +90,15 @@ select = [
     "YTT", # flake8-2020
     "UP",  # pyupgrade
     #    "A",  # flake8-builtins
+]
+ignore = [
+    "E501",   # Line too long
+    "E402",   # Module level import not at top of file
+    "F841",   # Local variable `...` is assigned to but never used
+    "BLE001", # Do not catch blind exception: `Exception`
+    "N802",   # Function name `...` should be lowercase
+    "N806",   # Variable `...` in function should be lowercase.
+    "SIM102", # Use a single `if` statement instead of nested `if` statements
 ]
 
 [tool.ruff.pyupgrade]

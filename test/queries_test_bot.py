@@ -4,10 +4,10 @@ These query functions are:
 self.can_place (RequestQueryBuildingPlacement)
 TODO: self.client.query_pathing (RequestQueryPathing)
 """
-import os
 import sys
+from pathlib import Path
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(Path(__file__).parent)
 
 from typing import List, Union
 

@@ -180,11 +180,11 @@ for item in {class_name}:
 
         if self.game_version is not None:
             version_path = Path(__file__).parent / "ids" / "id_version.py"
-            with open(version_path, "w") as f:
+            with Path(version_path).open("w") as f:
                 f.write(f'ID_VERSION_STRING = "{self.game_version}"\n')
 
     def update_ids_from_stableid_json(self):
-        if self.game_version is None or ID_VERSION_STRING is None or ID_VERSION_STRING != self.game_version:
+        if self.game_version is None or ID_VERSION_STRING is None or self.game_version != ID_VERSION_STRING:
             if self.verbose and self.game_version is not None and ID_VERSION_STRING is not None:
                 logger.info(
                     f"Game version is different (Old: {self.game_version}, new: {ID_VERSION_STRING}. Updating ids to match game version"
@@ -221,7 +221,7 @@ for item in {class_name}:
     def update_game_data(self):
         """Re-generate the dicts from self.game_data.
         This should be done after the ids have been reimported."""
-        ids = set(a.value for a in AbilityId if a.value != 0)
+        ids = {a.value for a in AbilityId if a.value != 0}
         self.game_data.abilities = {
             a.ability_id: AbilityData(self.game_data, a) for a in self.game_data._proto.abilities if a.ability_id in ids
         }
