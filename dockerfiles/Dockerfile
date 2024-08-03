@@ -28,7 +28,7 @@ RUN apt-get install --assume-yes --no-install-recommends --no-show-upgraded \
     libc6-dev \
     git  \
     unzip \
-    wget \
+    curl \
     rename \
     tree
 
@@ -38,7 +38,7 @@ WORKDIR /root/
 # Download and uncompress StarCraftII from https://github.com/Blizzard/s2client-proto#linux-packages and remove zip file
 # If file is locally available, use this instead:
 #COPY SC2.4.10.zip /root/
-RUN wget --quiet --show-progress --progress=bar:force http://blzdistsc2-a.akamaihd.net/Linux/SC2.$SC2_VERSION.zip \
+RUN curl http://blzdistsc2-a.akamaihd.net/Linux/SC2.$SC2_VERSION.zip -o "SC2.$SC2_VERSION.zip" \
     && unzip -q -P iagreetotheeula SC2.$SC2_VERSION.zip \
     && rm SC2.$SC2_VERSION.zip
 
@@ -55,45 +55,42 @@ RUN ln -s /root/StarCraftII/Maps /root/StarCraftII/maps \
 # Change to maps folder
 WORKDIR /root/StarCraftII/maps/
 
-# Maps are available here https://github.com/Blizzard/s2client-proto#map-packs and here http://wiki.sc2ai.net/Ladder_Maps
+# Maps are available here https://github.com/Blizzard/s2client-proto#map-packs and here https://sc2ai.net/wiki/maps/
 # Download and uncompress StarCraftII Maps, remove zip file - using "maps" instead of "Maps" as target folder
 
 # Get sc2ai.net ladder maps
-RUN wget --quiet --show-progress --progress=bar:force \
-    http://archive.sc2ai.net/Maps/Season1Maps.zip \
-    http://archive.sc2ai.net/Maps/Season2Maps.zip \
-    http://archive.sc2ai.net/Maps/Season3Maps.zip \
-    http://archive.sc2ai.net/Maps/Season4Maps.zip \
-    http://archive.sc2ai.net/Maps/Season5Maps.zip \
-    http://archive.sc2ai.net/Maps/Season6Maps.zip \
-    http://archive.sc2ai.net/Maps/Season7Maps.zip \
-    http://archive.sc2ai.net/Maps/Season8Maps.zip \
-    http://archive.sc2ai.net/Maps/Season9Maps.zip \
-    http://archive.sc2ai.net/Maps/Season10Maps.zip \
+# -L param follows links https://stackoverflow.com/a/2663023/10882657
+RUN curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/9/ -o 1.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/14/ -o 2.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/21/ -o 3.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/35/ -o 4.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/36/ -o 5.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/38/ -o 6.zip \
+    && curl -L https://sc2ai.net/wiki/184/plugin/attachments/download/39/ -o 7.zip \
     && unzip -q -o '*.zip' \
-    && rm *.zip 
+    && rm *.zip
 
 # Get official blizzard maps
-RUN wget --quiet --show-progress --progress=bar:force http://blzdistsc2-a.akamaihd.net/MapPacks/Ladder2019Season3.zip \
+RUN curl http://blzdistsc2-a.akamaihd.net/MapPacks/Ladder2019Season3.zip -o Ladder2019Season3.zip \
     && unzip -q -P iagreetotheeula -o 'Ladder2019Season3.zip' \
     && mv Ladder2019Season3/* . \
     && rm Ladder2019Season3.zip \
-    && rm -r Ladder2019Season3 
+    && rm -r Ladder2019Season3
 
 # Get v5.0.6 maps
-RUN wget --quiet --show-progress --progress=bar:force https://github.com/shostyn/sc2patch/raw/4987d4915b47c801adbc05e297abaa9ca2988838/Maps/506.zip \
+RUN curl -L https://github.com/shostyn/sc2patch/raw/4987d4915b47c801adbc05e297abaa9ca2988838/Maps/506.zip -o 506.zip \
     && unzip -q -o '506.zip' \
     && rm 506.zip
 
 # Get flat and empty maps
-RUN wget --quiet --show-progress --progress=bar:force http://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip \
+RUN curl http://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip -o Melee.zip \
     && unzip -q -P iagreetotheeula -o 'Melee.zip' \
     && mv Melee/* . \
     && rm Melee.zip \
     && rm -r Melee
 
 # Remove LE suffix from file names
-RUN rename -v 's/LE.SC2Map/.SC2Map/' *.SC2Map 
+RUN rename -v 's/LE.SC2Map/.SC2Map/' *.SC2Map
 
 # List all map files
 RUN tree

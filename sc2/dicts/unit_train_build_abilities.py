@@ -46,15 +46,15 @@ TRAIN_INFO: Dict[UnitTypeId, Dict[UnitTypeId, Dict[str, Union[AbilityId, bool, U
             'required_building': UnitTypeId.GREATERSPIRE
         }
     },
-    UnitTypeId.CREEPTUMORBURROWED: {
+    UnitTypeId.CREEPTUMOR: {
         UnitTypeId.CREEPTUMOR: {
-            'ability': AbilityId.BUILD_CREEPTUMOR,
+            'ability': AbilityId.BUILD_CREEPTUMOR_TUMOR,
             'requires_placement_position': True
         }
     },
-    UnitTypeId.CREEPTUMORQUEEN: {
+    UnitTypeId.CREEPTUMORBURROWED: {
         UnitTypeId.CREEPTUMOR: {
-            'ability': AbilityId.BUILD_CREEPTUMOR_TUMOR,
+            'ability': AbilityId.BUILD_CREEPTUMOR,
             'requires_placement_position': True
         }
     },
@@ -129,8 +129,7 @@ TRAIN_INFO: Dict[UnitTypeId, Dict[UnitTypeId, Dict[str, Union[AbilityId, bool, U
     },
     UnitTypeId.FACTORY: {
         UnitTypeId.CYCLONE: {
-            'ability': AbilityId.TRAIN_CYCLONE,
-            'requires_techlab': True
+            'ability': AbilityId.TRAIN_CYCLONE
         },
         UnitTypeId.HELLION: {
             'ability': AbilityId.FACTORYTRAIN_HELLION

@@ -198,6 +198,12 @@ def main():
         "WorldofSleepersLE",
         "YearZeroLE",
         "ZenLE",
+        "Equilibrium513AIE",
+        "GoldenAura513AIE",
+        "HardLead513AIE",
+        "Oceanborn513AIE",
+        "SiteDelta513AIE",
+        "Gresvan513AIE",
     ]
 
     for map_ in maps_:
