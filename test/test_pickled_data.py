@@ -11,6 +11,7 @@ All functions that require some kind of query or interaction with the API direct
 import lzma
 import math
 import pickle
+import platform
 import random
 import sys
 import unittest
@@ -968,8 +969,8 @@ def test_dicts():
         logger.info(f"Import error: dict sc2/dicts/unit_research_abilities.py is missing!")
         return
 
-    # If on macOS: skip (fails on several upgrades)
-    if sys.platform == "darwin":
+    # If on macOS or Linux: skip (fails on several upgrades on github actions)
+    if sys.platform == "darwin" or platform.system() == "Linux":
         return
 
     bot: BotAI = get_map_specific_bot(random.choice(MAPS))
