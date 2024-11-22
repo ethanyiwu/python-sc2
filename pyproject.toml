@@ -7,7 +7,7 @@ license = "MIT"
 homepage = "https://github.com/Burnysc2/python-sc2"
 documentation = "https://burnysc2.github.io/python-sc2/docs/index.html"
 keywords = ["StarCraft", "StarCraft 2", "StarCraft II", "AI", "Bot"]
-classifiers=[
+classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
@@ -25,19 +25,23 @@ classifiers=[
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-packages = [
-    { include = "sc2/**/*.py" },
-]
+packages = [{ include = "sc2/**/*.py" }]
 
 [tool.poetry.dependencies]
-python = ">=3.10, <3.14"
+python = ">=3.9, <3.14"
 aiohttp = "^3.7.4"
 loguru = "^0.6.0"
 mpyq = "^0.2.5"
-numpy = "^2.1.0"
+numpy = [
+    { version = ">=2.1.0", markers = "python_version >= '3.13'" },
+    { version = "<2.1.0", markers = "python_version < '3.13'" },
+]
 portpicker = "^1.4.0"
 s2clientprotocol = "^5.0.7"
-scipy = "^1.7.1"
+scipy = [
+    { version = ">=1.14.1", markers = "python_version >= '3.13'" },
+    { version = "^1.7.1", markers = "python_version < '3.13'" },
+]
 protobuf = "<4.0.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -103,7 +107,27 @@ max-line-length = 120
 # R0915: Too many statements (61/50) (too-many-statements)
 # W0640: Cell variable mining_place defined in loop (cell-var-from-loop)
 # W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-disable = ["C0301", "C0114", "C0115", "C0116", "R0913", "C0413", "C0411", "W0511", "W0105", "R0801", "W0621", "C0103", "R0903", "E1101", "C0302", "R0902", "R0915", "W0640", "W1514"]
+disable = [
+    "C0301",
+    "C0114",
+    "C0115",
+    "C0116",
+    "R0913",
+    "C0413",
+    "C0411",
+    "W0511",
+    "W0105",
+    "R0801",
+    "W0621",
+    "C0103",
+    "R0903",
+    "E1101",
+    "C0302",
+    "R0902",
+    "R0915",
+    "W0640",
+    "W1514",
+]
 
 [tool.yapf]
 based_on_style = "pep8"
